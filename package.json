@@ -1,0 +1,16 @@
+{
+  "name": "rhyvr-song-editor",
+  "version": "0.1.0",
+  "description": "An application to edit and build RhyVR songs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/ChristopherJMiller/rhyvr-song-editor",
+  "author": "ChristopherJMiller",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^1.4.1",
+    "bootstrap": "3.3.7"
+  }
+}
