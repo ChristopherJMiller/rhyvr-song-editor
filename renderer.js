@@ -15,7 +15,16 @@ function ClearDifficulties() {
   $('#songForm').children('div[id*="difficulty"]').remove();
 }
 
-var subdivisions;
+var subdivisions
+
+var difficultyContainers = []
+
+function SelectDifficulty(index) {
+  for (difficulties = 0; difficulties < difficultyContainers.length; difficulties++) {
+    difficultyContainers[difficulties].hide()
+  }
+  difficultyContainers[index].show()
+}
 
 function AddNoteRow(noteAreaContainer, noteRow, rowNumber) {
   var template = $('#noteRowTemplate').clone()
@@ -40,6 +49,7 @@ function ConstructNoteContainer(diffiuculty) {
   template.attr('id', 'noteArea' + diffiuculty.name.replace(/\s+/g, ''))
   template.appendTo('#noteArea')
   template.removeAttr('hidden')
+  template.hide()
   return template
 }
 
@@ -66,6 +76,11 @@ function AddDifficulty(difficulty) {
   template.appendTo('#songForm');
   template.removeAttr('hidden');
   var noteArea = ConstructNoteContainer(difficulty)
+  var index = difficultyContainers.length
+  difficultyContainers[difficultyContainers.length] = noteArea
+  template.children('div').children('div').children('a').click(function() {
+    SelectDifficulty(index)
+  })
   for (num = 0; num < difficulty.noteRow.length; num++) {
     AddNoteRow(noteArea, difficulty.noteRow[num], num)
     sleep(1)
@@ -76,6 +91,7 @@ function UpdateDifficultyCount() {
   ClearDifficulties();
   for(num = 0; num < $('#songNumberOfDifficulties').val(); num++) {
     var difficulty = {name: 'New Difficulty ' + num, level: 1, color: '#ffffff'}
+
     AddDifficulty(difficulty)
   }
 }
