@@ -3,19 +3,80 @@
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="node_modules/tether/dist/css/tether.min.css">
+    <script src="node_modules/tether/dist/js/tether.min.js"></script>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/main.css">
     <title>RhyVR Song Editor</title>
   </head>
   <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="note-area col-md-6 col-md-offset-1 col-lg-4 col-sm-8">
 
+        </div>
+        <div class="col-md-5 col-lg-7 col-sm-4">
+          <div class="my-1 pt-1", id="songForm">
+            <div class="form-group input-group field">
+              <div class="input-group-addon">Song Name</div>
+              <input type="text" class="form-control" id="" placeholder="">
+            </div>
+            <div class="form-group input-group field">
+              <div class="input-group-addon">Author</div>
+              <input type="text" class="form-control" id="" placeholder="">
+            </div>
+            <div class="form-group input-group field">
+              <div class="input-group-addon">Number of Drums</div>
+              <input type="number" class="form-control" id="" placeholder="">
+            </div>
+            <div class="form-group input-group field">
+              <div class="input-group-addon">BPM</div>
+              <input type="number" class="form-control" id="beatsPerMinute" placeholder="">
+            </div>
+            <div class="form-group input-group field">
+              <div class="input-group-addon">Subdivisions</div>
+              <input type="number" class="form-control" id="subdivision" placeholder="">
+            </div>
+            <div class="form-group input-group field">
+              <div class="input-group-addon">Number of Notes</div>
+              <input type="number" class="form-control" id="numberOfRows" placeholder="">
+            </div>
+            <div class="form-group input-group field">
+              <div class="input-group-addon">Difficulties</div>
+              <input type="number" class="form-control" id="numberOfDifficulties" placeholder="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
+
+  <div hidden id="difficultyTemplate">
+    <a class="btn btn-secondary btn-block btn-lg" data-toggle="collapse" href="#difficultyCollapse"><strong>Difficulty Level Name</strong><i class="fa fa-chevron-down diff-arrow" aria-hidden="true"></i></a>
+    <div class="collapse" id="difficultyCollapse">
+      <div class="card card-block">
+        <div class="form-group input-group field" name="name">
+          <div class="input-group-addon">Difficulty Name</div>
+          <input type="text" class="form-control" id="" placeholder="">
+        </div>
+        <div class="form-group input-group field" name="level">
+          <div class="input-group-addon">Difficulty Level</div>
+          <input type="number" class="form-control" id="" placeholder="">
+        </div>
+        <div class="form-group input-group field" name="color">
+          <div class="input-group-addon">Difficulty Color</div>
+          <input type="color" id="">
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     // You can also require other files to run in this process
     require('./renderer.js')
   </script>
+  <script src="./buttonevents.js"></script>
+  <script src="./noteeditor.js"></script>
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="node_modules/tether/dist/js/tether.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </html>

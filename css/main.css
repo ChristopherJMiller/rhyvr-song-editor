@@ -1,3 +1,13 @@
 body {
   background-color: #bbb;
 }
+
+.note-area {
+  background-color: #eee;
+  height: 100vh;
+}
+
+.diff-arrow {
+  text-align: right;
+  float: right;
+}

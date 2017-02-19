@@ -1,4 +1,4 @@
-const {electron, BrowserWindow, app, Menu} = require('electron')
+const {electron, BrowserWindow, app, Menu, dialog, ipcMain} = require('electron')
 
 const path = require('path')
 const url = require('url')
@@ -51,6 +51,17 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+let song
+
+function OpenAndLoadSong(filePath) {
+  var parsedObject
+  let fs = require('fs')
+  fs.readFile(filePath[0], 'utf8', function (err,data) {
+    song = JSON.parse(data.toString())
+  });
+}
+
 const template = [
   {
     label: 'File',
@@ -59,7 +70,10 @@ const template = [
         label: 'New'
       },
       {
-        label: 'Open'
+        label: 'Open',
+        click: function () {
+          console.log(dialog.showOpenDialog({properties: ['openFile']}, OpenAndLoadSong))
+        }
       },
       {
         label: 'Save'
@@ -104,6 +118,15 @@ const template = [
       },
       {
         role: 'selectall'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'toggledevtools'
+      },
+      {
+        role: 'forcereload'
       }
     ]
   }

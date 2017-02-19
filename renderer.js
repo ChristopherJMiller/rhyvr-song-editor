@@ -5,3 +5,8 @@ global.jQuery = require('jquery');
 var $ = require('jquery');
 window.$ = $;
 require('bootstrap');
+
+const {remote} = require('electron')
+const {Menu, MenuItem} = remote
+Menu.getApplicationMenu().items[0].submenu.items[1].click = (menuItem, browserWindow, event) => { console.log("triggered") };
+console.log(Menu.getApplicationMenu())
