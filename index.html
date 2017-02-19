@@ -19,31 +19,31 @@
           <div class="my-1 pt-1", id="songForm">
             <div class="form-group input-group field">
               <div class="input-group-addon">Song Name</div>
-              <input type="text" class="form-control" id="" placeholder="">
+              <input type="text" class="form-control" id="songName" placeholder="">
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">Author</div>
-              <input type="text" class="form-control" id="" placeholder="">
+              <input type="text" class="form-control" id="songAuthor" placeholder="">
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">Number of Drums</div>
-              <input type="number" class="form-control" id="" placeholder="">
+              <input type="number" class="form-control" id="songNumberOfDrums" placeholder="">
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">BPM</div>
-              <input type="number" class="form-control" id="beatsPerMinute" placeholder="">
+              <input type="number" class="form-control" id="songBeatsPerMinute" placeholder="">
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">Subdivisions</div>
-              <input type="number" class="form-control" id="subdivision" placeholder="">
+              <input type="number" class="form-control" id="songSubdivision" placeholder="">
             </div>
             <div class="form-group input-group field">
-              <div class="input-group-addon">Number of Notes</div>
-              <input type="number" class="form-control" id="numberOfRows" placeholder="">
+              <div class="input-group-addon">Number of Beats</div>
+              <input type="number" class="form-control" id="songNumberOfRows" placeholder="">
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">Difficulties</div>
-              <input type="number" class="form-control" id="numberOfDifficulties" placeholder="">
+              <input type="number" class="form-control" id="songNumberOfDifficulties" placeholder="">
             </div>
           </div>
         </div>
@@ -57,15 +57,15 @@
       <div class="card card-block">
         <div class="form-group input-group field" name="name">
           <div class="input-group-addon">Difficulty Name</div>
-          <input type="text" class="form-control" id="" placeholder="">
+          <input type="text" class="form-control" name="difficultyName" placeholder="">
         </div>
         <div class="form-group input-group field" name="level">
           <div class="input-group-addon">Difficulty Level</div>
-          <input type="number" class="form-control" id="" placeholder="">
+          <input type="number" class="form-control" name="difficultyLevel" placeholder="">
         </div>
         <div class="form-group input-group field" name="color">
           <div class="input-group-addon">Difficulty Color</div>
-          <input type="color" id="">
+          <input type="color" name="difficultyColor" value="#ff0000">
         </div>
       </div>
     </div>
@@ -75,8 +75,6 @@
     // You can also require other files to run in this process
     require('./renderer.js')
   </script>
-  <script src="./buttonevents.js"></script>
-  <script src="./noteeditor.js"></script>
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </html>

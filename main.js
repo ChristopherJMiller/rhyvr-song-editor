@@ -60,6 +60,7 @@ function OpenAndLoadSong(filePath) {
   fs.readFile(filePath[0], 'utf8', function (err,data) {
     song = JSON.parse(data.toString())
   });
+  mainWindow.webContents.send('LoadSong', song);
 }
 
 const template = [
