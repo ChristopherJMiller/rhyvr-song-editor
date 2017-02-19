@@ -16,6 +16,13 @@
 
         </div>
         <div class="col-md-5 col-lg-7 col-sm-4">
+          <div class="my-1">
+            <button type="button" class="btn btn-secondary btn-lg d-inline-block" id="songStart">Start</button>
+            <button type="button" class="btn btn-secondary btn-lg d-inline-block" id="songStop">Stop</button>
+          </div>
+          <div>
+            <audio id="audioPlayer"></audio>
+          </div>
           <div class="my-1 pt-1", id="songForm">
             <div class="form-group input-group field">
               <div class="input-group-addon">Song Name</div>
@@ -40,6 +47,10 @@
             <div class="form-group input-group field">
               <div class="input-group-addon">Offset</div>
               <input type="number" class="form-control" id="songOffset" placeholder="">
+            </div>
+            <div class="form-group input-group field">
+              <div class="input-group-addon">Song</div>
+              <input type="file" class="form-control" id="songFile" placeholder="">
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">Number of Note Rows</div>

@@ -4,6 +4,8 @@
 const {remote, ipcRenderer} = require('electron')
 const {Menu, MenuItem} = remote
 
+var NanoTimer = require('nanotimer');
+
 global.jQuery = require('jquery');
 var $ = require('jquery');
 window.$ = $;
@@ -17,12 +19,18 @@ function ClearDifficulties() {
 
 var subdivisions
 
+var offset
+var timeBetweenRow
+var numOfRows
+
 var difficultyContainers = []
+var currentlySelected
 
 function SelectDifficulty(index) {
   for (difficulties = 0; difficulties < difficultyContainers.length; difficulties++) {
     difficultyContainers[difficulties].hide()
   }
+  currentlySelected = index
   difficultyContainers[index].show()
 }
 
@@ -96,11 +104,36 @@ function UpdateDifficultyCount() {
   }
 }
 
+function StartRows() {
+  var idPrefix = '#' + difficultyContainers[currentlySelected].attr('id') + 'Row'
+  var currentRow = 0;
+  var tmpBackgroundColor = $(idPrefix + currentRow).css('background-color')
+  var timer = new NanoTimer();
+  timer.setInterval(function() {
+    if (currentRow != 0) {
+      $(idPrefix + (currentRow - 1)).css('background-color', tmpBackgroundColor)
+      tmpBackgroundColor = $(idPrefix + currentRow).css('background-color')
+    }
+    $(idPrefix + currentRow).css('background-color', 'red')
+    currentRow++
+  }, '', timeBetweenRow + 's')
+}
+
+function PlaySong() {
+  $('#audioPlayer').attr('src', $('#songFile').prop('files')[0].path)
+  document.getElementById('audioPlayer').play()
+  sleep(((offset * 1000) + (timeBetweenRow * 1000)))
+  StartRows()
+}
+
 
 
 //Button Events
 
 $('#songNumberOfDifficulties').change(() => { UpdateDifficultyCount() });
+$('#songStart').click(() => { PlaySong(); });
+
+//IPC
 
 ipcRenderer.on('LoadSong', (event, song) => {
   $('#songName').val(song.name)
@@ -110,7 +143,11 @@ ipcRenderer.on('LoadSong', (event, song) => {
   $('#noteRowTemplate').children('strong').attr('class', 'col-sm-' + Math.floor(12 / (song.numberOfDrums + 1)))
   $('#songBeatsPerMinute').val(song.bpm)
   $('#songSubdivision').val(song.subdivisions)
+  timeBetweenRow = 60 / (song.bpm * song.subdivisions)
+  console.log(timeBetweenRow)
+  offset = song.offset
   subdivisions = song.subdivisions
+  numOfRows = song.difficulties[0].noteRow.length
   $('#songOffset').val(song.offset)
   $('#songNumberOfRows').val(song.difficulties[0].noteRow.length)
   $('#songNumberOfDifficulties').val(song.difficulties.length)
