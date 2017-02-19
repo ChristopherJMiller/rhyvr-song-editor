@@ -111,6 +111,7 @@ ipcRenderer.on('LoadSong', (event, song) => {
   $('#songBeatsPerMinute').val(song.bpm)
   $('#songSubdivision').val(song.subdivisions)
   subdivisions = song.subdivisions
+  $('#songOffset').val(song.offset)
   $('#songNumberOfRows').val(song.difficulties[0].noteRow.length)
   $('#songNumberOfDifficulties').val(song.difficulties.length)
   ClearDifficulties()
