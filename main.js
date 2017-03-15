@@ -69,6 +69,7 @@ const template = [
     submenu: [
       {
         label: 'New'
+        
       },
       {
         label: 'Open',

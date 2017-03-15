@@ -10,16 +10,18 @@
     <title>RhyVR Song Editor</title>
   </head>
   <body>
-    <div class="container-fluid">
+    <div class="container-fluid app">
       <div class="row">
+        <div class="col-12 playbar">
+          <div class="my-1">
+            <button type="button" class="btn btn-secondary btn-lg d-inline-block" id="songStart">Start <i class="fa fa-play" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-secondary btn-lg d-inline-block" id="songStop">Stop <i class="fa fa-stop" aria-hidden="true"></i></button>
+          </div>
+        </div>
         <div class="note-area col-md-6 col-md-offset-1 col-lg-4 col-sm-8" id="noteArea">
 
         </div>
         <div class="col-md-5 col-lg-7 col-sm-4">
-          <div class="my-1">
-            <button type="button" class="btn btn-secondary btn-lg d-inline-block" id="songStart">Start</button>
-            <button type="button" class="btn btn-secondary btn-lg d-inline-block" id="songStop">Stop</button>
-          </div>
           <div>
             <audio id="audioPlayer"></audio>
           </div>
@@ -34,15 +36,15 @@
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">Number of Drums</div>
-              <input type="number" class="form-control" id="songNumberOfDrums" placeholder="">
+              <input type="number" class="form-control" id="songNumberOfDrums" placeholder="" disabled>
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">BPM</div>
-              <input type="number" class="form-control" id="songBeatsPerMinute" placeholder="">
+              <input type="number" class="form-control" id="songBeatsPerMinute" placeholder="" disabled>
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">Subdivisions</div>
-              <input type="number" class="form-control" id="songSubdivision" placeholder="">
+              <input type="number" class="form-control" id="songSubdivision" placeholder="" disabled>
             </div>
             <div class="form-group input-group field">
               <div class="input-group-addon">Offset</div>
@@ -56,10 +58,8 @@
               <div class="input-group-addon">Number of Note Rows</div>
               <input type="number" class="form-control" id="songNumberOfRows" placeholder="">
             </div>
-            <div class="form-group input-group field">
-              <div class="input-group-addon">Difficulties</div>
-              <input type="number" class="form-control" id="songNumberOfDifficulties" placeholder="">
-            </div>
+            <div id="difficultyArea"></div>
+            <button type="button" class="btn btn-primary btn-block" id="addDifficulty">Add A Difficulty</button>
           </div>
         </div>
       </div>

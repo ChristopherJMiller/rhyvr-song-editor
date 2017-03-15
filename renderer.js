@@ -13,10 +13,6 @@ require('bootstrap');
 
 //Page Changing Functions
 
-function ClearDifficulties() {
-  $('#songForm').children('div[id*="difficulty"]').remove();
-}
-
 var subdivisions
 
 var offset
@@ -81,7 +77,7 @@ function AddDifficulty(difficulty) {
   template.children('div').children('div').children('div[name="level"]').children('input').val(difficulty.level)
   template.children('div').children('div').children('div[name="color"]').children('input').val(difficulty.color.substring(1))
   template.children('a').css('background-color', difficulty.color.substring(1))
-  template.appendTo('#songForm');
+  template.appendTo('#difficultyArea');
   template.removeAttr('hidden');
   var noteArea = ConstructNoteContainer(difficulty)
   var index = difficultyContainers.length
@@ -92,15 +88,6 @@ function AddDifficulty(difficulty) {
   for (num = 0; num < difficulty.noteRow.length; num++) {
     AddNoteRow(noteArea, difficulty.noteRow[num], num)
     sleep(1)
-  }
-}
-
-function UpdateDifficultyCount() {
-  ClearDifficulties();
-  for(num = 0; num < $('#songNumberOfDifficulties').val(); num++) {
-    var difficulty = {name: 'New Difficulty ' + num, level: 1, color: '#ffffff'}
-
-    AddDifficulty(difficulty)
   }
 }
 
@@ -130,8 +117,9 @@ function PlaySong() {
 
 //Button Events
 
-$('#songNumberOfDifficulties').change(() => { UpdateDifficultyCount() });
-$('#songStart').click(() => { PlaySong(); });
+$('#songStart').click(() => { PlaySong() })
+
+$('#addDifficulty').click(() => { var difficulty = {name: 'New Difficulty ' + difficultyContainers.length, level: 1, color: '#ffffff', noteRow: []}; AddDifficulty(difficulty); })
 
 //IPC
 
