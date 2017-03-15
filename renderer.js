@@ -66,6 +66,10 @@ function sleep(milliseconds) {
   }
 }
 
+function DeleteDifficulty(index) {
+  difficultyContainers[index].remove()
+}
+
 
 function AddDifficulty(difficulty) {
   var template = $('#difficultyTemplate').clone();
@@ -82,8 +86,14 @@ function AddDifficulty(difficulty) {
   var noteArea = ConstructNoteContainer(difficulty)
   var index = difficultyContainers.length
   difficultyContainers[difficultyContainers.length] = noteArea
-  template.children('div').children('div').children('a').click(function() {
+  template.children('div').children('div').children('a[name="load"]').click(function() {
     SelectDifficulty(index)
+  })
+  template.children('div').children('div').children('a[name="delete"]').click(function() {
+    DeleteDifficulty(index)
+    template.fadeOut("fast", () => {
+      template.remove()
+    })
   })
   for (num = 0; num < difficulty.noteRow.length; num++) {
     AddNoteRow(noteArea, difficulty.noteRow[num], num)
