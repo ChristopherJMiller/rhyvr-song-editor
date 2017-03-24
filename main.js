@@ -55,6 +55,9 @@ app.on('activate', function () {
 let song
 
 function OpenAndLoadSong(filePath) {
+  if (filePath === undefined) {
+    return
+  }
   var parsedObject
   let fs = require('fs')
   fs.readFile(filePath[0], 'utf8', function (err,data) {
@@ -63,13 +66,29 @@ function OpenAndLoadSong(filePath) {
   mainWindow.webContents.send('LoadSong', song);
 }
 
+function PromptNewSong() {
+  let promptWindow = new BrowserWindow({parent: mainWindow, modal: true, resizable: true, frame: false, width: 400, height: 620})
+  promptWindow.webContents.on('did-finish-load', () => {
+    promptWindow.show()
+    promptWindow.focus()
+  })
+  promptWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'new.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+  //promptWindow.webContents.openDevTools()
+}
+
 const template = [
   {
     label: 'File',
     submenu: [
       {
-        label: 'New'
-        
+        label: 'New',
+        click: function () {
+          PromptNewSong()
+        }
       },
       {
         label: 'Open',

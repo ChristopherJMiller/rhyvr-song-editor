@@ -2,6 +2,10 @@ body {
   background-color: #bbb;
 }
 
+body.newForm {
+  background-color: #eee;
+}
+
 .note-area {
   background-color: #ddd;
   max-height: 100%;

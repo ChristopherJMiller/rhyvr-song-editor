@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="node_modules/tether/dist/css/tether.min.css">
+    <script src="node_modules/tether/dist/js/tether.min.js"></script>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body class="newForm">
+    <div class="container">
+      <form class="py-2">
+        <h3>Create A Song</h3>
+        <div class="form-group input-group field">
+          <div class="input-group-addon">Song Name</div>
+          <input type="text" class="form-control" id="songName" placeholder="">
+        </div>
+        <div class="form-group input-group field">
+          <div class="input-group-addon">Author</div>
+          <input type="text" class="form-control" id="songAuthor" placeholder="">
+        </div>
+        <div class="form-group input-group field">
+          <div class="input-group-addon">Number of Drums</div>
+          <input type="number" class="form-control" id="songNumberOfDrums" placeholder="">
+        </div>
+        <div class="form-group input-group field">
+          <div class="input-group-addon">BPM</div>
+          <input type="number" class="form-control" id="songBeatsPerMinute" placeholder="">
+        </div>
+        <div class="form-group input-group field">
+          <div class="input-group-addon">Subdivisions</div>
+          <input type="number" class="form-control" id="songSubdivision" placeholder="">
+        </div>
+        <div class="form-group input-group field">
+          <div class="input-group-addon">Offset</div>
+          <input type="number" class="form-control" id="songOffset" placeholder="">
+        </div>
+        <div class="form-group input-group field">
+          <div class="input-group-addon">Song</div>
+          <input type="file" class="form-control" id="songFile" placeholder="">
+        </div>
+        <div class="form-group input-group field">
+          <div class="input-group-addon">Number of Note Rows</div>
+          <input type="number" class="form-control" id="songNumberOfRows" placeholder="">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Create</button>
+
+      </form>
+      <button type="button" id="cancel" class="btn btn-secondary btn-block">Cancel</button>
+    </div>
+    <script>
+      // You can also require other files to run in this process
+      require('./new.js')
+    </script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
