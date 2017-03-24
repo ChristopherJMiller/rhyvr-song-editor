@@ -8,5 +8,6 @@ console.log(remote)
 let win = remote.getCurrentWindow()
 
 $('#cancel').click(() => {
+  win.hide()
   win.close()
 })

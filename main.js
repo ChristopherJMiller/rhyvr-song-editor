@@ -13,10 +13,12 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
+    pathname: path.join(__dirname, 'pages', 'index.html'),
     protocol: 'file:',
     slashes: true
   }))
+
+  //mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -67,13 +69,13 @@ function OpenAndLoadSong(filePath) {
 }
 
 function PromptNewSong() {
-  let promptWindow = new BrowserWindow({parent: mainWindow, modal: true, resizable: true, frame: false, width: 400, height: 620})
+  let promptWindow = new BrowserWindow({parent: mainWindow, modal: true, resizable: true, frame: false, width: 400, height: 620, maxHeight: 620})
   promptWindow.webContents.on('did-finish-load', () => {
     promptWindow.show()
     promptWindow.focus()
   })
   promptWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'new.html'),
+    pathname: path.join(__dirname, 'pages', 'new.html'),
     protocol: 'file:',
     slashes: true
   }))
