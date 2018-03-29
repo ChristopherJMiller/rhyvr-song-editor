@@ -2,6 +2,7 @@ const {electron, BrowserWindow, app, Menu, dialog, ipcMain} = require('electron'
 
 const path = require('path')
 const url = require('url')
+const AdmZip = require('adm-zip-electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -60,12 +61,23 @@ function OpenAndLoadSong(filePath) {
   if (filePath === undefined) {
     return
   }
-  var parsedObject
+  let fs = require('fs')
+  let bin = require('binutils')
+  fs.readFile(filePath[0], function (err,data) {
+   let reader = new bin.BinaryReader(data)
+
+  })
+}
+
+function ImportJSONSong(filePath) {
+  if (filePath === undefined) {
+    return
+  }
   let fs = require('fs')
   fs.readFile(filePath[0], 'utf8', function (err,data) {
     song = JSON.parse(data.toString())
-  });
-  mainWindow.webContents.send('LoadSong', song);
+    mainWindow.webContents.send('LoadSong', song)
+  })
 }
 
 function PromptNewSong() {
@@ -82,6 +94,17 @@ function PromptNewSong() {
   //promptWindow.webContents.openDevTools()
 }
 
+function SaveSong(path) {
+  mainWindow.webContents.send('SaveSongData')
+  ipcMain.on('ReturnedSongData', (event, arg) => {
+    let admzip = new AdmZip()
+    console.log(arg.song)
+    admzip.addLocalFile(arg.song)
+    admzip.addFile('song.json', new Buffer(JSON.stringify(arg.data)), "Song Data")
+    admzip.writeZip(path)
+  })
+}
+
 const template = [
   {
     label: 'File',
@@ -95,11 +118,20 @@ const template = [
       {
         label: 'Open',
         click: function () {
-          console.log(dialog.showOpenDialog({properties: ['openFile']}, OpenAndLoadSong))
+          dialog.showOpenDialog({filters: [{name: 'RhyVR Song File', extensions: ['rhyvr']}]}, OpenAndLoadSong)
         }
       },
       {
-        label: 'Save'
+        label: 'Import',
+        click: function () {
+          dialog.showOpenDialog({filters: [{name: 'JSON File', extensions: ['json']}]}, ImportJSONSong)
+        }
+      },      
+      {
+        label: 'Save',
+        click: function () {
+          dialog.showSaveDialog({filters: [{name: 'RhyVR Song File', extensions: ['rhyvr']}]}, SaveSong)
+        }
       },
       {
         label: 'Save As'

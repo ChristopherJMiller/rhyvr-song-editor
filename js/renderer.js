@@ -101,11 +101,15 @@ function AddDifficulty(difficulty) {
   }
 }
 
+let timer;
+let currentRow;
+let idPrefix;
+let tmpBackgroundColor;
 function StartRows() {
-  var idPrefix = '#' + difficultyContainers[currentlySelected].attr('id') + 'Row'
-  var currentRow = 0;
-  var tmpBackgroundColor = $(idPrefix + currentRow).css('background-color')
-  var timer = new NanoTimer();
+  idPrefix = '#' + difficultyContainers[currentlySelected].attr('id') + 'Row'
+  currentRow = 0;
+  tmpBackgroundColor = $(idPrefix + currentRow).css('background-color')
+  timer = new NanoTimer();
   timer.setInterval(function() {
     if (currentRow != 0) {
       $(idPrefix + (currentRow - 1)).css('background-color', tmpBackgroundColor)
@@ -123,11 +127,18 @@ function PlaySong() {
   StartRows()
 }
 
+function StopSong() {
+  document.getElementById('audioPlayer').pause()
+  timer.clearInterval()
+  $(idPrefix + (currentRow - 1)).css('background-color', tmpBackgroundColor)
+}
+
 
 
 //Button Events
 
 $('#songStart').click(() => { PlaySong() })
+$('#songStop').click(() => { StopSong() })
 
 $('#addDifficulty').click(() => { var difficulty = {name: 'New Difficulty ' + difficultyContainers.length, level: 1, color: '#ffffff', noteRow: []}; AddDifficulty(difficulty); })
 
@@ -149,6 +160,39 @@ ipcRenderer.on('LoadSong', (event, song) => {
   $('#songOffset').val(song.offset)
   $('#songNumberOfRows').val(song.difficulties[0].noteRow.length)
   $('#songNumberOfDifficulties').val(song.difficulties.length)
-  ClearDifficulties()
+  difficultyContainers = [];
   AddDifficulty(song.difficulties[0])
+})
+
+ipcRenderer.on('SaveSongData', () => {
+  let data = {
+    name: $('#songName').val(),
+    author: $('#songAuthor').val(),
+    numberOfDrums: $('#songNumberOfDrums').val(),
+    bpm: $('#songBeatsPerMinute').val(),
+    subdivision: $('#songSubdivision').val(),
+    offset: $('#songOffset').val(),
+    difficulties: [{
+      name: null,
+      level: null,
+      color: null,
+      noteRow: []
+    }]
+  }
+  for (i = 0; i < difficultyContainers.length; i++) {
+    let difficultyArea =  $('#difficultyArea').children()[i]
+    data.difficulties[i].name = $(difficultyArea).children('div').children('div').children('div[name="name"]').children('input').val()
+    data.difficulties[i].level = $(difficultyArea).children('div').children('div').children('div[name="level"]').children('input').val()
+    data.difficulties[i].color = $(difficultyArea).children('div').children('div').children('div[name="color"]').children('input').val()
+    for (j = 0; j < difficultyContainers[i].children().length; j++) {
+      let dataRow = difficultyContainers[i].children()[j]
+      data.difficulties[i].noteRow[j] = {
+        row: []
+      }
+      for (k = 1; k < $(dataRow).children().length; k++) {
+        data.difficulties[i].noteRow[j].row[k - 1] = $($(dataRow).children()[k]).children('input').prop( "checked" ) ? 1 : 0
+      }
+    }
+  }
+  ipcRenderer.send("ReturnedSongData", {data: data, song: $("#songFile").val()})
 })
