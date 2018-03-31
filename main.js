@@ -2,13 +2,16 @@ const {electron, BrowserWindow, app, Menu, dialog, ipcMain} = require('electron'
 
 const path = require('path')
 const url = require('url')
-const AdmZip = require('adm-zip-electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
+  let fs = require('fs')
+  if (fs.existsSync('song.wav')) {
+    fs.unlinkSync('song.wav')
+  }
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
 
@@ -62,10 +65,48 @@ function OpenAndLoadSong(filePath) {
     return
   }
   let fs = require('fs')
-  let bin = require('binutils')
-  fs.readFile(filePath[0], function (err,data) {
-   let reader = new bin.BinaryReader(data)
+  let wav = require('wav');
+  let yauzl = require("yauzl")
 
+  let songData = {}
+  let song = null
+
+  yauzl.open(String(filePath), {lazyEntries: true}, function(err, zipfile) {
+    if (err) throw err;
+    zipfile.readEntry();
+    zipfile.on("entry", function(entry) {
+      if (/\/$/.test(entry.fileName)) {
+        // Directory file names end with '/'.
+        // Note that entires for directories themselves are optional.
+        // An entry's fileName implicitly requires its parent directories to exist.
+        zipfile.readEntry()
+      } else {
+        // file entry
+        zipfile.openReadStream(entry, function(err, readStream) {
+          if (err) throw err;
+          result = ''
+          readStream.on("end", function() {
+            if (entry.fileName == 'song.json') {
+              songData = JSON.parse(result)
+            } else {
+              song = result
+            }
+            zipfile.readEntry()
+          })
+          readStream.on('data', function(chunk) {
+            result += chunk
+          })
+          if (entry.fileName == 'song.wav') {
+            let writeStream = fs.createWriteStream(entry.fileName)
+            readStream.pipe(writeStream)
+          }
+        })
+      }
+    })
+    zipfile.on("close", () => {
+      console.log("Sending Song")
+      mainWindow.webContents.send('LoadSong', songData, true)
+    })
   })
 }
 
@@ -97,11 +138,19 @@ function PromptNewSong() {
 function SaveSong(path) {
   mainWindow.webContents.send('SaveSongData')
   ipcMain.on('ReturnedSongData', (event, arg) => {
-    let admzip = new AdmZip()
-    console.log(arg.song)
-    admzip.addLocalFile(arg.song)
-    admzip.addFile('song.json', new Buffer(JSON.stringify(arg.data)), "Song Data")
-    admzip.writeZip(path)
+    let fs = require('fs')
+    var yazl = require("yazl");
+
+    var zipfile = new yazl.ZipFile();
+    zipfile.addBuffer(Buffer.from(JSON.stringify(arg.data)), "song.json", {
+      mtime: new Date(),
+      mode: parseInt("0100664", 8), // -rw-rw-r--
+    })
+    zipfile.addFile(arg.song, "song.wav");
+    zipfile.outputStream.pipe(fs.createWriteStream(path)).on("close", function() {
+      console.log("done")
+    })
+    zipfile.end()
   })
 }
 

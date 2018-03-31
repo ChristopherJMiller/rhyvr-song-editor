@@ -95,8 +95,18 @@ function AddDifficulty(difficulty) {
       template.remove()
     })
   })
-  for (num = 0; num < difficulty.noteRow.length; num++) {
-    AddNoteRow(noteArea, difficulty.noteRow[num], num)
+  for (num = 0; num < $('#songNumberOfRows').val(); num++) {
+    if (difficulty.noteRow[num] === undefined) {
+      let newRow = {
+        row: []
+      }
+      for (var i = 0; i < $('#songNumberOfDrums').val(); i++) {
+        newRow.row[i] = 0;
+      }
+      AddNoteRow(noteArea, newRow, num)
+    } else {
+      AddNoteRow(noteArea, difficulty.noteRow[num], num)
+    }
     sleep(1)
   }
 }
@@ -107,7 +117,7 @@ let idPrefix;
 let tmpBackgroundColor;
 function StartRows() {
   idPrefix = '#' + difficultyContainers[currentlySelected].attr('id') + 'Row'
-  currentRow = 0;
+  currentRow = 1;
   tmpBackgroundColor = $(idPrefix + currentRow).css('background-color')
   timer = new NanoTimer();
   timer.setInterval(function() {
@@ -120,8 +130,15 @@ function StartRows() {
   }, '', timeBetweenRow + 's')
 }
 
+let fileToPlay = false;
+
 function PlaySong() {
-  $('#audioPlayer').attr('src', $('#songFile').prop('files')[0].path)
+  if (!fileToPlay) {
+    $('#audioPlayer').attr('src', $('#songFile').prop('files')[0].path)
+  } else {
+    $('#audioPlayer').attr('src', '../song.wav')
+  }
+  document.getElementById('audioPlayer').load()
   document.getElementById('audioPlayer').play()
   sleep(((offset * 1000) + (timeBetweenRow * 1000)))
   StartRows()
@@ -142,17 +159,26 @@ $('#songStop').click(() => { StopSong() })
 
 $('#addDifficulty').click(() => { var difficulty = {name: 'New Difficulty ' + difficultyContainers.length, level: 1, color: '#ffffff', noteRow: []}; AddDifficulty(difficulty); })
 
+let difficultiesFromSong = null
+$('#loadDifficulty').click(() => { 
+   for(var i = 0; i < difficultiesFromSong.length; i++) {
+    AddDifficulty(difficultiesFromSong[i])
+   }
+   $('#loadDifficulty').hide()
+})
+
 //IPC
 
-ipcRenderer.on('LoadSong', (event, song) => {
+ipcRenderer.on('LoadSong', (event, song, file = false) => {
+  console.log("Song Received")
   $('#songName').val(song.name)
   $('#songAuthor').val(song.author)
   $('#songNumberOfDrums').val(song.numberOfDrums)
-  $('#noteTemplate').attr('class', 'col-sm-' + Math.floor(12 / (song.numberOfDrums + 1)))
-  $('#noteRowTemplate').children('strong').attr('class', 'col-sm-' + Math.floor(12 / (song.numberOfDrums + 1)))
+  $('#noteTemplate').attr('class', 'col-sm-' + Math.floor(12 / (Number(song.numberOfDrums) + 1)))
+  $('#noteRowTemplate').children('strong').attr('class', 'col-sm-' + Math.floor(12 / (Number(song.numberOfDrums) + 1)))
   $('#songBeatsPerMinute').val(song.bpm)
-  $('#songSubdivision').val(song.subdivisions)
-  timeBetweenRow = 60 / (song.bpm * song.subdivisions)
+  $('#songSubdivision').val(song.subdivision)
+  timeBetweenRow = 60 / (song.bpm * song.subdivision)
   console.log(timeBetweenRow)
   offset = song.offset
   subdivisions = song.subdivisions
@@ -160,8 +186,13 @@ ipcRenderer.on('LoadSong', (event, song) => {
   $('#songOffset').val(song.offset)
   $('#songNumberOfRows').val(song.difficulties[0].noteRow.length)
   $('#songNumberOfDifficulties').val(song.difficulties.length)
+  if (file) {
+    $('#songFile').hide(500)
+    $('#songFile').parent().children('label').text("Song: Added")
+    fileToPlay = file
+  }
   difficultyContainers = [];
-  AddDifficulty(song.difficulties[0])
+  difficultiesFromSong = song.difficulties
 })
 
 ipcRenderer.on('SaveSongData', () => {
@@ -194,5 +225,5 @@ ipcRenderer.on('SaveSongData', () => {
       }
     }
   }
-  ipcRenderer.send("ReturnedSongData", {data: data, song: $("#songFile").val()})
+  ipcRenderer.send("ReturnedSongData", {data: data, song: fileToPlay ? 'song.wav' : document.getElementById("songFile").files[0].path})
 })
