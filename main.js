@@ -61,6 +61,7 @@ app.on('activate', function () {
 let song
 
 function OpenAndLoadSong(filePath) {
+  mainWindow.webContents.send('ToggleLoading')
   if (filePath === undefined) {
     return
   }
@@ -106,6 +107,7 @@ function OpenAndLoadSong(filePath) {
     zipfile.on("close", () => {
       console.log("Sending Song")
       mainWindow.webContents.send('LoadSong', songData, true)
+      mainWindow.webContents.send('ToggleLoading')
     })
   })
 }

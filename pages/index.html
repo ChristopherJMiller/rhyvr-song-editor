@@ -12,6 +12,9 @@
   </head>
   <body>
     <div class="container-fluid app">
+      <div id="loading" class="overlay">
+          <i class="fa fa-3x fa-spinner fa-pulse overlay-text"></i>
+      </div>
       <div class="row">
         <div class="col-12 playbar">
           <div class="py-1">
@@ -60,7 +63,7 @@
               <input type="number" class="form-control" id="songNumberOfRows" placeholder="">
             </div>
             <div id="difficultyArea"></div>
-            <button type="button" class="btn btn-primary btn-block" id="loadDifficulty">Load All Difficulties</button>
+            <button type="button" class="btn btn-warning btn-block" id="loadDifficulty">Load All Difficulties</button>
             <button type="button" class="btn btn-primary btn-block" id="addDifficulty">Add A Difficulty</button>
           </div>
         </div>

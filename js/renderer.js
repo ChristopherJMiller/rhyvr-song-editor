@@ -139,6 +139,7 @@ function PlaySong() {
     $('#audioPlayer').attr('src', '../song.wav')
   }
   document.getElementById('audioPlayer').load()
+  sleep(250)
   document.getElementById('audioPlayer').play()
   sleep(((offset * 1000) + (timeBetweenRow * 1000)))
   StartRows()
@@ -159,12 +160,15 @@ $('#songStop').click(() => { StopSong() })
 
 $('#addDifficulty').click(() => { var difficulty = {name: 'New Difficulty ' + difficultyContainers.length, level: 1, color: '#ffffff', noteRow: []}; AddDifficulty(difficulty); })
 
+
 let difficultiesFromSong = null
-$('#loadDifficulty').click(() => { 
-   for(var i = 0; i < difficultiesFromSong.length; i++) {
+$('#loadDifficulty').click(() => {
+  for(var i = 0; i < difficultiesFromSong.length; i++) {
     AddDifficulty(difficultiesFromSong[i])
-   }
-   $('#loadDifficulty').hide()
+  }
+  $('#loadDifficulty').hide()
+  $("#songStart").removeClass("disabled")
+  $("#songStop").removeClass("disabled")
 })
 
 //IPC
@@ -193,6 +197,8 @@ ipcRenderer.on('LoadSong', (event, song, file = false) => {
   }
   difficultyContainers = [];
   difficultiesFromSong = song.difficulties
+
+  $("#loadDifficulty").show()
 })
 
 ipcRenderer.on('SaveSongData', () => {
@@ -227,3 +233,15 @@ ipcRenderer.on('SaveSongData', () => {
   }
   ipcRenderer.send("ReturnedSongData", {data: data, song: fileToPlay ? 'song.wav' : document.getElementById("songFile").files[0].path})
 })
+
+ipcRenderer.on('ToggleLoading', () => {
+  $("#loading").toggle()
+})
+
+
+// Elements Init
+
+$("#loading").toggle()
+$("#loadDifficulty").hide()
+$("#songStart").addClass("disabled")
+$("#songStop").addClass("disabled")
